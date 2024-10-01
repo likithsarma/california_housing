@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Price Prediction</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-5">Housing Price Prediction</h2>
+        <form id="prediction-form">
+            <div class="form-group">
+                <label for="MedInc">Median Income:</label>
+                <input type="number" class="form-control" id="MedInc" required>
+            </div>
+            <div class="form-group">
+                <label for="HouseAge">Median House Age:</label>
+                <input type="number" class="form-control" id="HouseAge" required>
+            </div>
+            <div class="form-group">
+                <label for="AveRooms">Average Rooms:</label>
+                <input type="number" class="form-control" id="AveRooms" required>
+            </div>
+            <div class="form-group">
+                <label for="AveBedrms">Average Bedrooms:</label>
+                <input type="number" class="form-control" id="AveBedrms" required>
+            </div>
+            <div class="form-group">
+                <label for="Population">Population:</label>
+                <input type="number" class="form-control" id="Population" required>
+            </div>
+            <div class="form-group">
+                <label for="AveOccup">Average Occupancy:</label>
+                <input type="number" class="form-control" id="AveOccup" required>
+            </div>
+            <div class="form-group">
+                <label for="Latitude">Latitude:</label>
+                <input type="number" class="form-control" step="any" id="Latitude" required>
+            </div>
+            <div class="form-group">
+                <label for="Longitude">Longitude:</label>
+                <input type="number" class="form-control" step="any" id="Longitude" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const data = {
+                data: {
+                    MedInc: parseFloat(document.getElementById('MedInc').value),
+                    HouseAge: parseFloat(document.getElementById('HouseAge').value),
+                    AveRooms: parseFloat(document.getElementById('AveRooms').value),
+                    AveBedrms: parseFloat(document.getElementById('AveBedrms').value),
+                    Population: parseFloat(document.getElementById('Population').value),
+                    AveOccup: parseFloat(document.getElementById('AveOccup').value),
+                    Latitude: parseFloat(document.getElementById('Latitude').value),
+                    Longitude: parseFloat(document.getElementById('Longitude').value)
+                }
+            };
+
+            const response = await fetch('/predict_api', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                document.getElementById('result').innerText = 'Prediction: ' + result;
+            } else {
+                document.getElementById('result').innerText = 'Error in prediction!';
+            }
+        });
+    </script>
+</body>
+</html>
